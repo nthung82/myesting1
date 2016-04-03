@@ -1,0 +1,16 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*~
+
+Servers/
+target/
+.settings/
+.build/
+.sonar/
+.classpath
+.project
