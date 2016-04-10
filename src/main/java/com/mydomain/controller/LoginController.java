@@ -10,6 +10,6 @@ public class LoginController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String login() {
-		return "redirect:/index.jsp";
+		return "redirect:/dummy";
 	}
 }

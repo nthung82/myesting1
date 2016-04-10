@@ -1,6 +1,8 @@
 package com.mydomain.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +25,15 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 /**
  * Dummy test class
@@ -106,13 +111,19 @@ ObjectData obj;
     	//	sourceFileName = "D:/test.jasper";
     		
     		ArrayList<ObjectData> dataList = mytest();
-    		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(
-    				dataList);
-    		JasperReport jasperReport = JasperCompileManager.compileReport("D:/test.jrxml");
-    	/*	JasperReport report = (JasperReport) JRLoader
-    				.loadObjectFromFile(sourceFileName);*/
-    		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
-    				parameters, beanColDataSource);
+//    		/ create a new Gson instance
+    		 Gson gson = new Gson();
+    		 // convert your list to json
+    		 String jsonCartList = gson.toJson(dataList);
+    		 System.err.println(jsonCartList);
+    		/*JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(
+    				dataList);*/
+    		InputStream stream = new ByteArrayInputStream(jsonCartList.getBytes("UTF-8"));
+    		JsonDataSource xx= new JsonDataSource(stream);
+    	//	JasperReport jasperReport = JasperCompileManager.compileReport("D:/test.jrxml");
+    	
+    		JasperPrint jasperPrint = JasperFillManager.fillReport("D:/test.jasper",
+    				parameters, xx);
     		if (jasperPrint != null) {
     			byte[] pdfReport = JasperExportManager
     					.exportReportToPdf(jasperPrint);
